@@ -1,3 +1,13 @@
-@import "@advi/shared-styles/variables.css";
-@import "@advi/shared-styles/base.css";
+@import "tailwindcss";
+@import "@advi/shared-styles/tailwind-theme.css";
 @import "@advi/shared-styles/animations.css";
+
+@layer base {
+  body {
+    @apply font-sans bg-umblue-50 text-umblue-700 antialiased;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
