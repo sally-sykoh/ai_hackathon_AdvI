@@ -39,6 +39,12 @@ async def start_session(req: SessionRequest):
     # Get answered count and total questions
     total_questions = len(agent._preset_questions)
     answered_count = agent._preset_index  # _preset_index is the next question index, so it equals answered count
+    
+    # Ensure answered_count matches preset_complete state
+    if preset_complete:
+        answered_count = total_questions  # All questions answered
+    elif answered_count > total_questions:
+        answered_count = total_questions  # Clamp to max
 
     return SessionResponse(
         reply=reply,
@@ -63,6 +69,12 @@ async def send_message(req: MessageRequest):
     # Get updated answered count and total questions
     total_questions = len(agent._preset_questions)
     answered_count = agent._preset_index
+    
+    # Ensure answered_count matches preset_complete state
+    if preset_complete:
+        answered_count = total_questions  # All questions answered
+    elif answered_count > total_questions:
+        answered_count = total_questions  # Clamp to max
 
     return SessionResponse(
         reply=reply,
@@ -84,10 +96,15 @@ async def freeform_message(req: FreeFormRequest):
 
     reply = await agent.handle_freeform(req.message, req.lecture_ids)
 
+    # Get current state to include answered_count and total_questions
+    _, preset_complete, answered_count, total_questions = agent.get_current_state()
+
     return SessionResponse(
         reply=reply,
         preset_question=None,
-        preset_complete=True,
+        preset_complete=preset_complete,
+        answered_count=answered_count,
+        total_questions=total_questions,
         conversation=agent.get_session_messages(),
     )
 
@@ -119,6 +136,12 @@ async def get_current_question(student_id: str, lecture_id: str):
         raise HTTPException(404, "No active session. Call /session/start first.")
     
     current_q, preset_complete, answered_count, total_questions = agent.get_current_state()
+    
+    # Ensure answered_count matches preset_complete state
+    if preset_complete:
+        answered_count = total_questions  # All questions answered
+    elif answered_count > total_questions:
+        answered_count = total_questions  # Clamp to max
     
     return SessionResponse(
         reply="",  # Empty reply since we're just getting state

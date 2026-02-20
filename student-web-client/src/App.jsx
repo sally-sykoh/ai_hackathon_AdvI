@@ -159,6 +159,34 @@ export default function App() {
     };
   }, [sessionReady]);
 
+  // Poll current question state periodically to keep counts in sync
+  useEffect(() => {
+    if (!sessionReady) return;
+    
+    let cancelled = false;
+    const pollCurrentState = async () => {
+      try {
+        const currentState = await getCurrentQuestion(STUDENT_ID, LECTURE_ID);
+        if (!cancelled) {
+          // Update counts from backend state
+          setAnsweredCount(currentState.answered_count ?? 0);
+          setTotalQuestions(currentState.total_questions ?? 0);
+          setPresetComplete(currentState.preset_complete ?? false);
+        }
+      } catch (err) {
+        // Silently fail - session might not exist yet
+        console.debug("Failed to poll current question state:", err);
+      }
+    };
+
+    // Poll every 3 seconds to keep counts synchronized
+    const interval = setInterval(pollCurrentState, 3000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [sessionReady]);
+
   // Start session on mount
   useEffect(() => {
     let cancelled = false;

@@ -7,10 +7,8 @@ import CriticalInfo from "./components/CriticalInfo";
 import SuggestedQuestions from "./components/SuggestedQuestions";
 import GarminAnalytics from "./components/GarminAnalytics";
 import Dashboard from "./components/Dashboard";
-import ConceptMastery from "./components/ConceptMastery";
 import MaterialsCard from "./components/MaterialsCard";
 import DiveDeepModal from "./components/DiveDeepModal";
-import AiInsights from "./components/AiInsights";
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -124,21 +122,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Row 3: Concept Mastery */}
-        <div className="grid grid-cols-12 gap-4 mb-4">
-          <div className="col-span-6">
-            <ConceptMastery 
-              conceptMastery={analytics.concept_mastery || []}
-              questionResponses={analytics.question_responses || []}
-              totalStudents={analytics.total_students || 0}
-            />
-          </div>
-        </div>
-
-        {/* Row 4: AI Insights */}
-        <div className="col-span-8 col-start-3">
-          <AiInsights insights={analytics.ai_insights || []} />
-        </div>
       </div>
 
       <DiveDeepModal

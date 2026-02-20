@@ -12,43 +12,43 @@ export default function ConceptMastery({
   questionResponses = null, 
   totalStudents = 0 
 }) {
-  // Use real data if available, otherwise fall back to mock data
-  const mastery = conceptMastery && conceptMastery.length > 0 
-    ? conceptMastery 
-    : defaultConceptMastery;
-  const responses = questionResponses && questionResponses.length > 0
-    ? questionResponses
-    : defaultQuestionResponses;
-  const studentCount = totalStudents > 0 ? totalStudents : 142;
+  // Use real data if available, otherwise show empty state (no mock data fallback)
+  const mastery = conceptMastery && conceptMastery.length > 0 ? conceptMastery : [];
+  const responses = questionResponses && questionResponses.length > 0 ? questionResponses : [];
   return (
     <div className="bg-white rounded-2xl border border-umblue-100 shadow-sm p-5 h-full flex flex-col" style={{ minHeight: "500px" }}>
       {/* Concept Mastery Section */}
       <div>
-        <div className="flex items-center justify-between mb-3">
+        <div className="mb-3">
           <div className="text-xs font-semibold uppercase tracking-wider text-umblue-400">
             Concept Mastery
           </div>
-          <span className="text-xs text-umblue-400 font-medium">Lecture 4</span>
         </div>
-        <div className="flex flex-col gap-2.5">
-          {mastery.map((c, i) => {
-            const col = masteryColor(c.pct);
-            return (
-              <div key={i}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-umblue-700 font-medium">{c.label}</span>
-                  <span className="text-xs font-bold" style={{ color: col.text }}>{c.pct}%</span>
+        {mastery.length === 0 ? (
+          <div className="flex items-center justify-center py-8">
+            <p className="text-sm text-umblue-400">No concept mastery data yet</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2.5">
+            {mastery.map((c, i) => {
+              const col = masteryColor(c.pct);
+              return (
+                <div key={i}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-umblue-700 font-medium">{c.label}</span>
+                    <span className="text-xs font-bold" style={{ color: col.text }}>{c.pct}%</span>
+                  </div>
+                  <div className="h-1.5 bg-umblue-50 rounded-full">
+                    <div
+                      className="h-1.5 rounded-full transition-all"
+                      style={{ width: `${c.pct}%`, background: col.bar }}
+                    />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-umblue-50 rounded-full">
-                  <div
-                    className="h-1.5 rounded-full transition-all"
-                    style={{ width: `${c.pct}%`, background: col.bar }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Divider */}
@@ -56,25 +56,36 @@ export default function ConceptMastery({
 
       {/* Student Responses Section */}
       <div className="flex flex-col">
-        <div className="flex items-center justify-between mb-3">
+        <div className="mb-3">
           <div className="text-xs font-semibold uppercase tracking-wider text-umblue-400">
             Student Responses
           </div>
-          <span className="text-xs text-umblue-400 font-medium">{studentCount} students</span>
         </div>
-        <div className="flex flex-col gap-2">
-          {responses.map((r, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <span className="text-xs font-bold text-umblue-400 w-5 flex-shrink-0">{r.label}</span>
-              <div className="flex-1 flex h-2 rounded-full overflow-hidden gap-px">
-                <div className="bg-emerald-400 rounded-l-full" style={{ width: `${r.correct}%` }} />
-                <div className="bg-amber-400" style={{ width: `${r.partial}%` }} />
-                <div className="bg-red-400 rounded-r-full" style={{ width: `${r.incorrect}%` }} />
-              </div>
-              <span className="text-[10px] text-umblue-400 w-8 text-right flex-shrink-0">{r.correct}%</span>
-            </div>
-          ))}
-        </div>
+        {responses.length === 0 ? (
+          <div className="flex items-center justify-center py-8">
+            <p className="text-sm text-umblue-400">No student response data yet</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {responses.map((r, i) => {
+              const total = (r.correct || 0) + (r.partial || 0) + (r.incorrect || 0);
+              // Only show bar if there's actual data
+              if (total === 0) return null;
+              
+              return (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-umblue-400 w-5 flex-shrink-0">{r.label}</span>
+                  <div className="flex-1 flex h-2 rounded-full overflow-hidden gap-px">
+                    <div className="bg-emerald-400 rounded-l-full" style={{ width: `${r.correct || 0}%` }} />
+                    <div className="bg-amber-400" style={{ width: `${r.partial || 0}%` }} />
+                    <div className="bg-red-400 rounded-r-full" style={{ width: `${r.incorrect || 0}%` }} />
+                  </div>
+                  <span className="text-[10px] text-umblue-400 w-8 text-right flex-shrink-0">{r.correct || 0}%</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
         {/* Legend */}
         <div className="flex items-center gap-4 mt-3 pt-2 border-t border-umblue-50">
           {[
