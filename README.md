@@ -13,6 +13,12 @@ AdvI connects two sides of the classroom through AI:
 
 ```
 AdvI/
+├── app/                       Python backend – FastAPI + OpenAI
+│   ├── agent/                 AI Agent (chatbot) + LLM API (faculty analytics)
+│   ├── db/                    In-memory Student DB + Faculty DB
+│   ├── models/                Pydantic schemas
+│   ├── routes/                API endpoints (student + faculty)
+│   └── main.py                FastAPI entry point
 ├── shared-styles/             Shared design tokens, CSS vars, Tailwind theme
 ├── faculty-web-client/        React app – Faculty Dashboard
 ├── student-web-client/        React app – Student AI Agent
@@ -23,6 +29,8 @@ AdvI/
 ```
 
 ## Quick Start
+
+### Frontend
 
 This project uses **npm workspaces**. Install all dependencies from the root:
 
@@ -41,6 +49,17 @@ cd faculty-web-client && npm run dev
 # Student AI agent
 cd student-web-client && npm run dev
 ```
+
+### Backend
+
+```bash
+cd app
+pip install -r requirements.txt
+cp .env.example .env          # add your OpenAI API key
+uvicorn app.main:app --reload --port 8000
+```
+
+API docs available at **http://localhost:8000/docs**
 
 ## Modules
 
@@ -70,6 +89,31 @@ Centralized design system consumed by both web clients. Published as `@advi/shar
 @import "@advi/shared-styles/variables.css";
 @import "@advi/shared-styles/base.css";
 @import "@advi/shared-styles/animations.css";
+```
+
+### Backend API (`app/`)
+
+FastAPI + OpenAI backend with two core components:
+
+- **`agent/chat_agent.py`** — Student-facing AI chatbot. Guides students through preset questions with Socratic follow-ups, then supports free-form lecture exploration. Reads from both databases, calls OpenAI for responses.
+- **`agent/llm_api.py`** — Faculty-facing analytics engine. Analyzes all student conversations against lecture material to produce per-concept insights and auto-generate preset questions.
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/api/student/session/start` | POST | Start a chat session (returns greeting + first preset Q) |
+| `/api/student/session/message` | POST | Send a student message during preset Q&A |
+| `/api/student/session/freeform` | POST | Free-form question after preset Qs complete |
+| `/api/student/session/end` | POST | End session, persist conversation to Student DB |
+| `/api/faculty/lectures` | POST | Upload lecture materials |
+| `/api/faculty/lectures` | GET | List all lectures |
+| `/api/faculty/insights/{id}` | GET | Generate AI insights + preset questions |
+| `/api/faculty/questions/generate` | POST | Generate & save preset questions |
+
+```bash
+cd app
+pip install -r requirements.txt
+cp .env.example .env
+uvicorn app.main:app --reload --port 8000
 ```
 
 ### Faculty Dashboard (`faculty-web-client/`)
@@ -124,6 +168,8 @@ The platform consists of four core backend components:
 
 ## Prerequisites
 
+- [Python](https://www.python.org/) 3.11+ (for backend)
 - [Node.js](https://nodejs.org/) v18+ (for React modules)
 - npm (included with Node.js)
+- An [OpenAI API key](https://platform.openai.com/api-keys) (for backend)
 - A modern web browser (for static wireframes)

@@ -1,79 +1,111 @@
-import { useState } from "react";
-import { initialMessages } from "./data/mockData";
+import { useState, useEffect, useCallback } from "react";
+import { startSession, sendMessage, sendFreeform } from "./services/api";
+import { ensureSeeded } from "./services/seed";
 import Topbar from "./components/Topbar";
-import HeroRow from "./components/HeroRow";
-import PresetProgressCard from "./components/PresetProgressCard";
-import SessionStatsCard from "./components/SessionStatsCard";
-import ConfidenceCard from "./components/ConfidenceCard";
-import LectureInfoCard from "./components/LectureInfoCard";
 import ChatCard from "./components/ChatCard";
+import LectureInfoCard from "./components/LectureInfoCard";
 import KeyConceptsCard from "./components/KeyConceptsCard";
-import LectureTopicsCard from "./components/LectureTopicsCard";
 import ActivityCard from "./components/ActivityCard";
+import LectureTopicsCard from "./components/LectureTopicsCard";
+
+const STUDENT_ID = "alex";
+const LECTURE_ID = "lec10";
 
 export default function App() {
-  const [messages, setMessages] = useState(initialMessages);
-  const completedCount = 2;
-  const studentMsgCount = messages.filter((m) => m.role === "student").length;
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [presetComplete, setPresetComplete] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
+  const [backendDown, setBackendDown] = useState(false);
 
-  function handleNewMessage(msg) {
-    setMessages((prev) => [...prev, msg]);
-  }
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const seeded = await ensureSeeded();
+      if (!seeded) { setBackendDown(true); return; }
+      try {
+        const res = await startSession(STUDENT_ID, LECTURE_ID);
+        if (cancelled) return;
+        setMessages([{ role: "ai", text: res.reply, time: now() }]);
+        setPresetComplete(res.preset_complete);
+        setSessionReady(true);
+      } catch {
+        if (!cancelled) setBackendDown(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleSend = useCallback(
+    async (text) => {
+      setMessages((prev) => [...prev, { role: "student", text, time: now() }]);
+      setLoading(true);
+      try {
+        const res = presetComplete
+          ? await sendFreeform(STUDENT_ID, [LECTURE_ID], text)
+          : await sendMessage(STUDENT_ID, LECTURE_ID, text);
+        setMessages((prev) => [...prev, { role: "ai", text: res.reply, time: now() }]);
+        if (res.preset_complete && !presetComplete) setPresetComplete(true);
+      } catch (err) {
+        setMessages((prev) => [
+          ...prev,
+          { role: "ai", text: `Something went wrong: ${err.message}`, time: now() },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [presetComplete]
+  );
 
   return (
     <div className="min-h-screen bg-umblue-50">
-      {/* Wireframe Banner */}
       <div className="bg-gradient-to-r from-umblue-700 to-umblue-600 text-center py-2 text-[11px] font-semibold tracking-[0.2em] uppercase text-maize-300">
-        <span className="text-white">AdvI</span> — Student AI Agent — 2026 AI Hackathon
+        <span className="text-white">AdvI</span> &mdash; Student AI Agent &mdash; 2026 AI Hackathon
       </div>
 
-      {/* Top Bar */}
       <Topbar />
 
-      {/* Hero Row */}
-      <HeroRow />
+      {backendDown && (
+        <div className="mx-auto max-w-2xl mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-3 text-sm text-center">
+          <strong>Backend not reachable.</strong>{" "}
+          <code className="bg-red-100 px-2 py-0.5 rounded text-xs">
+            uvicorn app.main:app --reload --port 8000
+          </code>
+        </div>
+      )}
 
-      {/* Bento Grid */}
-      <div className="px-8 pb-8">
-        <div className="grid grid-cols-12 gap-4 auto-rows-auto">
-
-          {/* Row 1: Preset Progress (3 cols) | Session Stats + Lecture Info (2 cols) | Confidence (2 cols) | Chat starts (5 cols, spans 2 rows) */}
-          <div className="col-span-3 row-span-2">
-            <PresetProgressCard completedCount={completedCount} />
-          </div>
-
-          <div className="col-span-2">
-            <SessionStatsCard messageCount={studentMsgCount} completedCount={completedCount} />
-          </div>
-
-          <div className="col-span-2 row-span-2">
-            <ConfidenceCard />
-          </div>
-
-          <div className="col-span-5 row-span-2" style={{ minHeight: 520 }}>
-            <ChatCard messages={messages} onSend={handleNewMessage} />
-          </div>
-
-          {/* Row 1 continued: under session stats */}
-          <div className="col-span-2">
+      <div className="px-6 pb-8">
+        <div className="grid grid-cols-12 gap-4">
+          {/* Left sidebar */}
+          <div className="col-span-3 flex flex-col gap-4">
             <LectureInfoCard />
-          </div>
-
-          {/* Row 3: Key Concepts | Activity | Lecture Topics */}
-          <div className="col-span-3">
             <KeyConceptsCard />
-          </div>
-
-          <div className="col-span-4">
-            <ActivityCard />
-          </div>
-
-          <div className="col-span-5">
             <LectureTopicsCard />
           </div>
 
+          {/* Centered chat */}
+          <div className="col-span-6 flex justify-center">
+            <div className="w-full max-w-lg" style={{ height: "calc(100vh - 160px)" }}>
+              <ChatCard
+                messages={messages}
+                onSend={handleSend}
+                loading={loading}
+                disabled={!sessionReady}
+              />
+            </div>
+          </div>
+
+          {/* Right sidebar */}
+          <div className="col-span-3 flex flex-col gap-4">
+            <ActivityCard />
+          </div>
         </div>
       </div>
     </div>
   );
+}
+
+function now() {
+  return new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 }
