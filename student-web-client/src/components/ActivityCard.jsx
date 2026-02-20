@@ -1,11 +1,18 @@
-export default function ActivityCard() {
-  const total = 3;
-  const answered = 2;
-  const activities = [
-    { label: "Pass-by-value vs Pass-by-reference", time: "2:34 PM", type: "success" },
-    { label: "For loops vs While loops", time: "2:38 PM", type: "success" },
-    { label: "Header files & .cpp files", time: "2:39 PM", type: "active" },
-  ];
+import { presetQuestions } from "../data/mockData";
+
+const QUESTION_LABELS = [
+  "Pass-by-value vs Pass-by-reference",
+  "For loops vs While loops",
+  "Header files & .cpp files",
+];
+
+export default function ActivityCard({ answeredCount = 0, presetComplete = false }) {
+  const total = presetQuestions.length;
+
+  const activities = QUESTION_LABELS.map((label, i) => ({
+    label,
+    type: i < answeredCount ? "success" : i === answeredCount && !presetComplete ? "active" : "pending",
+  }));
 
   const dotStyles = {
     success: "bg-maize-500",
@@ -27,13 +34,13 @@ export default function ActivityCard() {
       {/* Progress bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] font-semibold text-umblue-600">{answered}/{total} Questions</span>
-          <span className="text-[10px] text-umblue-400">{Math.round((answered / total) * 100)}%</span>
+          <span className="text-[11px] font-semibold text-umblue-600">{answeredCount}/{total} Questions</span>
+          <span className="text-[10px] text-umblue-400">{Math.round((answeredCount / total) * 100)}%</span>
         </div>
         <div className="h-2 bg-umblue-50 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-maize-400 to-maize-500 rounded-full transition-all"
-            style={{ width: `${(answered / total) * 100}%` }}
+            style={{ width: `${(answeredCount / total) * 100}%` }}
           />
         </div>
       </div>
@@ -45,7 +52,11 @@ export default function ActivityCard() {
             <span className={`text-xs flex-1 ${a.type === "pending" ? "text-umblue-300" : "text-umblue-600"} ${a.type === "active" ? "font-semibold" : ""}`}>
               {a.label}
             </span>
-            <span className="text-[10px] text-umblue-300 tabular-nums">{a.time}</span>
+            {a.type === "success" && (
+              <svg className="w-3.5 h-3.5 text-maize-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
           </div>
         ))}
       </div>

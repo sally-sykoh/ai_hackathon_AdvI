@@ -15,6 +15,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [presetComplete, setPresetComplete] = useState(false);
+  const [answeredCount, setAnsweredCount] = useState(2);
   const [sessionReady, setSessionReady] = useState(false);
   const [backendDown, setBackendDown] = useState(false);
 
@@ -45,6 +46,7 @@ export default function App() {
           ? await sendFreeform(STUDENT_ID, [LECTURE_ID], text)
           : await sendMessage(STUDENT_ID, LECTURE_ID, text);
         setMessages((prev) => [...prev, { role: "ai", text: res.reply, time: now() }]);
+        if (!presetComplete) setAnsweredCount((c) => c + 1);
         if (res.preset_complete && !presetComplete) setPresetComplete(true);
       } catch (err) {
         setMessages((prev) => [
@@ -70,7 +72,7 @@ export default function App() {
         </div>
       </div>
 
-      <Topbar />
+      <Topbar answeredCount={answeredCount} presetComplete={presetComplete} />
 
       {backendDown && (
         <div className="mx-auto max-w-2xl mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-3 text-sm text-center">
@@ -105,7 +107,7 @@ export default function App() {
 
           {/* Right sidebar */}
           <div className="col-span-3 flex flex-col gap-4">
-            <ActivityCard />
+            <ActivityCard answeredCount={answeredCount} presetComplete={presetComplete} />
           </div>
         </div>
       </div>

@@ -1,7 +1,9 @@
-import { student } from "../data/mockData";
+import { student, presetQuestions } from "../data/mockData";
 import AiCompanion from "./AiCompanion";
 
-export default function Topbar() {
+export default function Topbar({ answeredCount = 0, presetComplete = false }) {
+  const total = presetQuestions.length;
+  const remaining = total - answeredCount;
   return (
     <header className="relative flex items-center justify-between px-8 py-4">
       {/* Brand + companion */}
@@ -17,13 +19,17 @@ export default function Topbar() {
 
       {/* Center — Search (absolutely centered to align with chat grid) */}
       <div className="absolute left-1/2 -translate-x-1/2 hidden md:block">
-        <div className="flex items-center gap-2.5 bg-white border border-umblue-100 rounded-2xl pl-4 pr-3 py-2.5 text-sm text-umblue-400 shadow-sm hover:shadow-md hover:border-umblue-200 transition-all w-80 group">
-          <svg className="w-4 h-4 text-umblue-300 group-hover:text-maize-500 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <div className="flex items-center gap-2.5 bg-white border border-umblue-100 rounded-2xl pl-4 pr-3 py-2.5 text-sm text-umblue-400 shadow-sm hover:shadow-md hover:border-umblue-200 focus-within:border-maize-400 focus-within:ring-2 focus-within:ring-maize-100 transition-all w-80 group">
+          <svg className="w-4 h-4 text-umblue-300 group-hover:text-maize-500 transition-colors flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <span className="text-umblue-300">Search lectures, concepts...</span>
-          <kbd className="ml-auto text-[10px] font-mono bg-umblue-50 text-umblue-300 border border-umblue-100 rounded-md px-1.5 py-0.5">/</kbd>
+          <input
+            type="text"
+            className="flex-1 bg-transparent text-sm text-umblue-700 placeholder:text-umblue-300 outline-none"
+            placeholder="Search lectures, concepts..."
+          />
+          <kbd className="ml-auto text-[10px] font-mono bg-umblue-50 text-umblue-300 border border-umblue-100 rounded-md px-1.5 py-0.5 flex-shrink-0">/</kbd>
         </div>
       </div>
 
@@ -32,20 +38,33 @@ export default function Topbar() {
         {/* Question streak badge */}
         <div className="hidden lg:flex items-center gap-2.5 bg-gradient-to-r from-umblue-700 to-umblue-600 rounded-2xl px-4 py-2 shadow-sm">
           <div className="flex -space-x-0.5">
-            {[1, 2].map((q) => (
-              <div key={q} className="w-5 h-5 rounded-full bg-maize-500 flex items-center justify-center ring-2 ring-umblue-700">
-                <svg className="w-2.5 h-2.5 text-umblue-700" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                  <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            ))}
-            <div className="w-5 h-5 rounded-full bg-umblue-400 border-2 border-umblue-500 flex items-center justify-center ring-2 ring-umblue-700 animate-pulse">
-              <div className="w-1.5 h-1.5 rounded-full bg-white" />
-            </div>
+            {Array.from({ length: total }, (_, i) => {
+              const done = i < answeredCount;
+              const active = i === answeredCount && !presetComplete;
+              return done ? (
+                <div key={i} className="w-5 h-5 rounded-full bg-maize-500 flex items-center justify-center ring-2 ring-umblue-700">
+                  <svg className="w-2.5 h-2.5 text-umblue-700" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              ) : active ? (
+                <div key={i} className="w-5 h-5 rounded-full bg-umblue-400 border-2 border-umblue-500 flex items-center justify-center ring-2 ring-umblue-700 animate-pulse">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                </div>
+              ) : (
+                <div key={i} className="w-5 h-5 rounded-full bg-umblue-500/50 border-2 border-umblue-500 flex items-center justify-center ring-2 ring-umblue-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-umblue-300/50" />
+                </div>
+              );
+            })}
           </div>
           <div>
-            <div className="text-[11px] font-bold text-white leading-tight">2 Qs answered</div>
-            <div className="text-[9px] text-umblue-200">1 remaining</div>
+            <div className="text-[11px] font-bold text-white leading-tight">
+              {presetComplete ? "All done!" : `${answeredCount} Q${answeredCount !== 1 ? "s" : ""} answered`}
+            </div>
+            <div className="text-[9px] text-umblue-200">
+              {presetComplete ? "Free-form mode" : `${remaining} remaining`}
+            </div>
           </div>
         </div>
 

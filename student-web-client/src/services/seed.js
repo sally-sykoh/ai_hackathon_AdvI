@@ -1,4 +1,6 @@
-import { getLectures, uploadLecture, generateQuestions } from "./api";
+import { getLectures, uploadLecture, generateQuestions, startSession, sendMessage } from "./api";
+
+const STUDENT_ID = "alex";
 
 const SEED_LECTURE = {
   lectureId: "lec4",
@@ -20,6 +22,11 @@ Key Topics:
 6) Default Arguments — C++ allows default parameter values (e.g., void print(int x, int base = 10)). Defaults must be specified from right to left and are typically declared in the header file.`,
 };
 
+const DEMO_ANSWERS = [
+  "Pass-by-value copies the argument so changes inside the function don't affect the original. Pass-by-reference uses & and modifies the original variable directly. I'd use const& for large objects I don't want to modify.",
+  "A for loop is best when you know the iteration count — initializer, condition, and increment are all in one line. A while loop is better for unknown iterations, like reading until EOF. There's also do-while which runs at least once.",
+];
+
 export async function ensureSeeded() {
   try {
     const lectures = await getLectures();
@@ -36,6 +43,13 @@ export async function ensureSeeded() {
       SEED_LECTURE.content
     );
     await generateQuestions(SEED_LECTURE.lectureId, 3);
+
+    // Pre-answer the first 2 questions so the demo starts with 1 remaining
+    await startSession(STUDENT_ID, SEED_LECTURE.lectureId);
+    for (const answer of DEMO_ANSWERS) {
+      await sendMessage(STUDENT_ID, SEED_LECTURE.lectureId, answer);
+    }
+
     return true;
   } catch {
     return false;

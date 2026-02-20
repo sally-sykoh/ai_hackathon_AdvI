@@ -18,13 +18,14 @@ function StudentAvatar() {
 
 export default function ChatCard({ messages, onSend, loading = false, disabled = false, presetComplete = false }) {
   const [text, setText] = useState("");
-  const bottomRef   = useRef(null);
+  const scrollRef   = useRef(null);
   const textareaRef = useRef(null);
 
   const aiState = loading ? "thinking" : "idle";
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = scrollRef.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
   const handleSend = useCallback(() => {
@@ -82,7 +83,7 @@ export default function ChatCard({ messages, onSend, loading = false, disabled =
       </div>
 
       {/* ── Messages ──────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4 chat-scroll bg-umblue-50/30">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4 chat-scroll bg-umblue-50/30">
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -155,7 +156,6 @@ export default function ChatCard({ messages, onSend, loading = false, disabled =
           </div>
         )}
 
-        <div ref={bottomRef} />
       </div>
 
       {/* ── Input ─────────────────────────────────────────────────────── */}
