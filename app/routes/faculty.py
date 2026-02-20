@@ -9,10 +9,11 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.agent import LLMApi
-from app.db import faculty_db
+from app.db import faculty_db, student_db
 from app.models import (
     LectureMaterial,
     FacultyInsightResponse,
+    PresetQuestion,
 )
 
 router = APIRouter(prefix="/api/faculty", tags=["faculty"])
@@ -27,6 +28,11 @@ class UploadLectureRequest(BaseModel):
 class GenerateQuestionsRequest(BaseModel):
     lecture_id: str
     count: int = 5
+
+
+class SubmitQuestionsRequest(BaseModel):
+    lecture_id: str
+    questions: list[dict]  # [{question: str, concept: str}, ...]
 
 
 @router.post("/lectures")
@@ -71,3 +77,20 @@ async def generate_questions(req: GenerateQuestionsRequest):
         insights=insights,
         suggested_questions=questions,
     )
+
+
+@router.post("/questions/submit")
+async def submit_questions(req: SubmitQuestionsRequest):
+    """Submit manually selected preset questions for a lecture."""
+    import uuid
+    questions = [
+        PresetQuestion(
+            id=str(uuid.uuid4()),
+            lecture_id=req.lecture_id,
+            question=q.get("question", ""),
+            concept=q.get("concept", q.get("tag", "")),
+        )
+        for q in req.questions
+    ]
+    student_db.set_preset_questions(req.lecture_id, questions)
+    return {"status": "ok", "lecture_id": req.lecture_id, "count": len(questions)}

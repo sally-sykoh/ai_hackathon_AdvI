@@ -43,35 +43,6 @@ function StatsRow() {
 function ChartsColumn() {
   return (
     <div className="flex flex-col gap-4 h-full">
-      {/* Concept Mastery */}
-      <div className="bg-white rounded-2xl border border-umblue-100 shadow-sm p-5 flex-1">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-umblue-400">
-            Concept Mastery
-          </div>
-          <span className="text-xs text-umblue-400 font-medium">Lecture 10</span>
-        </div>
-        <div className="flex flex-col gap-3">
-          {conceptMastery.map((c, i) => {
-            const col = masteryColor(c.pct);
-            return (
-              <div key={i}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-umblue-700 font-medium">{c.label}</span>
-                  <span className="text-xs font-bold" style={{ color: col.text }}>{c.pct}%</span>
-                </div>
-                <div className="h-1.5 bg-umblue-50 rounded-full">
-                  <div
-                    className="h-1.5 rounded-full transition-all"
-                    style={{ width: `${c.pct}%`, background: col.bar }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Student Responses */}
       <div className="bg-white rounded-2xl border border-umblue-100 shadow-sm p-5 flex-1">
         <div className="flex items-center justify-between mb-4">

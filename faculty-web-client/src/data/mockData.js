@@ -1,117 +1,115 @@
 export const lectures = [
-  { id: 1, title: "Intro to ML" },
-  { id: 2, title: "Linear Regression" },
-  { id: 3, title: "Classification" },
-  { id: 4, title: "Decision Trees" },
-  { id: 5, title: "Neural Networks" },
-  { id: 6, title: "CNNs" },
-  { id: 7, title: "RNNs & LSTMs" },
-  { id: 8, title: "Transformers" },
-  { id: 9, title: "Attention Mechanisms" },
-  { id: 10, title: "Fine-Tuning LLMs" },
-  { id: 11, title: "RAG Systems" },
-  { id: 12, title: "AI Ethics" },
+  { id: 1, title: "Intro to C++" },
+  { id: 2, title: "Variables & Data Types" },
+  { id: 3, title: "Control Flow" },
+  { id: 4, title: "Functions" },
+  { id: 5, title: "Arrays & Strings" },
+  { id: 6, title: "Pointers & References" },
 ];
 
 export const materials = [
-  { name: "Lecture_10_Slides.pdf", type: "pdf", date: "Feb 14", size: "4.2 MB" },
-  { name: "FineTuning_LLMs_Notes.pptx", type: "ppt", date: "Feb 14", size: "8.1 MB" },
-  { name: "Lab_10_Instructions.docx", type: "doc", date: "Feb 15", size: "1.3 MB" },
-  { name: "Supplementary_Reading.pdf", type: "pdf", date: "Feb 16", size: "2.7 MB" },
+  { name: "Lecture_1_Intro_Slides.pdf", type: "pdf", date: "Jan 15", size: "4.2 MB", course: "EECS 183" },
+  { name: "Lecture_2_Variables_Slides.pdf", type: "pdf", date: "Jan 22", size: "3.9 MB", course: "EECS 183" },
+  { name: "Lecture_3_ControlFlow_Notes.pptx", type: "ppt", date: "Jan 29", size: "5.8 MB", course: "EECS 183" },
+  { name: "Lecture_4_Functions_Slides.pdf", type: "pdf", date: "Feb 5", size: "3.8 MB", course: "EECS 183" },
+  { name: "Lab_4_Instructions.docx", type: "doc", date: "Feb 6", size: "1.1 MB", course: "EECS 183" },
+  { name: "Functions_Notes.pptx", type: "ppt", date: "Feb 5", size: "6.2 MB", course: "EECS 183" },
+  { name: "Practice_Problems_Set1.pdf", type: "pdf", date: "Feb 7", size: "2.3 MB", course: "EECS 183" },
+  { name: "Lecture_5_Arrays_Slides.pdf", type: "pdf", date: "Feb 12", size: "4.1 MB", course: "EECS 183" },
+  { name: "Midterm_Study_Guide.pdf", type: "pdf", date: "Feb 10", size: "5.2 MB", course: "EECS 183" },
+  { name: "Lab_5_Instructions.docx", type: "doc", date: "Feb 13", size: "1.4 MB", course: "EECS 183" },
 ];
 
 export const criticalConcepts = [
   {
-    id: "lora",
-    concept: "LoRA vs Full Fine-Tuning Trade-offs",
-    pct: 78,
-    desc: "Students cannot clearly differentiate when to use LoRA adapters versus full parameter fine-tuning and its impact on model performance and cost.",
+    id: "passbyref",
+    concept: "Pass-by-Reference vs Pass-by-Value",
+    pct: 72,
+    desc: "Students struggle to understand when to use pass-by-reference (&) versus pass-by-value, and the implications for modifying original variables.",
     severity: 700,
   },
   {
-    id: "forgetting",
-    concept: "Catastrophic Forgetting",
-    pct: 62,
-    desc: "Many students struggle to explain what catastrophic forgetting is and the strategies used to mitigate it during fine-tuning.",
+    id: "headerfiles",
+    concept: "Header Files (.h) and Source Files (.cpp)",
+    pct: 58,
+    desc: "Many students are confused about the separation of declarations in header files versus implementations in source files, and how #include works.",
     severity: 600,
   },
   {
-    id: "hyperparams",
-    concept: "Hyperparameter Selection for Fine-Tuning",
-    pct: 45,
-    desc: "Students are uncertain about choosing learning rate, batch size, and epoch count when fine-tuning pre-trained models.",
+    id: "loops",
+    concept: "For Loops vs While Loops",
+    pct: 42,
+    desc: "Students have difficulty choosing between for loops and while loops, and understanding when do-while loops are appropriate.",
     severity: 400,
   },
   {
-    id: "dataprep",
-    concept: "Data Preparation for Fine-Tuning",
-    pct: 34,
-    desc: "A subset of students are confused about dataset formatting, tokenization, and prompt-template construction for instruction-tuning.",
+    id: "scope",
+    concept: "Variable Scope and Lifetime",
+    pct: 35,
+    desc: "A subset of students struggle with understanding local vs global scope, and how variable lifetime relates to function calls.",
     severity: 300,
   },
 ];
 
 export const questionSets = [
   [
-    { q: "Explain the key differences between LoRA fine-tuning and full-parameter fine-tuning. When would you recommend each approach?", tag: "LoRA & Fine-Tuning" },
-    { q: "What is catastrophic forgetting and what are two strategies to mitigate it when fine-tuning a large language model?", tag: "Catastrophic Forgetting" },
-    { q: "Describe how you would prepare a dataset for instruction-tuning a pre-trained model, including the role of prompt templates.", tag: "Data Preparation" },
+    { q: "What is the difference between pass-by-value and pass-by-reference in C++? When would you use each?", tag: "Functions & Parameters" },
+    { q: "Explain how a for loop differs from a while loop, and when you'd pick one over the other.", tag: "Control Flow" },
+    { q: "What is the purpose of a header file (.h) and how does it relate to the .cpp file?", tag: "File Organization" },
   ],
   [
-    { q: "Compare the computational costs of LoRA adapters versus full fine-tuning for a 7B parameter model. What are the practical implications?", tag: "LoRA & Fine-Tuning" },
-    { q: "How does learning rate warmup help prevent catastrophic forgetting? Provide a concrete example.", tag: "Catastrophic Forgetting" },
-    { q: "What role does the rank parameter play in LoRA, and how does it affect model capacity and training efficiency?", tag: "LoRA Configuration" },
+    { q: "When would you use const& instead of just & for a function parameter? Provide an example.", tag: "Functions & Parameters" },
+    { q: "Explain the difference between a for loop, while loop, and do-while loop with concrete examples.", tag: "Control Flow" },
+    { q: "What are include guards and why are they necessary in header files?", tag: "File Organization" },
   ],
   [
-    { q: "A startup wants to fine-tune an open-source LLM for customer support. Should they use LoRA or full fine-tuning? Justify your answer.", tag: "Applied Fine-Tuning" },
-    { q: "Explain how elastic weight consolidation (EWC) helps mitigate catastrophic forgetting. What are its limitations?", tag: "Catastrophic Forgetting" },
-    { q: "Why is evaluation on a held-out set critical during fine-tuning? What metrics would you track and why?", tag: "Evaluation" },
+    { q: "Write a function that swaps two integers using pass-by-reference. Explain why pass-by-value wouldn't work.", tag: "Functions & Parameters" },
+    { q: "When should you use a do-while loop instead of a regular while loop?", tag: "Control Flow" },
+    { q: "Explain the compilation process: how does the compiler use header files and source files together?", tag: "File Organization" },
   ],
 ];
 
 export const diveDeepData = {
-  lora: [
-    { title: "Root Cause", text: 'Students conflate "fewer trainable parameters" with "worse performance." 68% of struggling students incorrectly stated LoRA always produces inferior models.' },
-    { title: "Conversation Pattern", text: "When asked follow-up questions, students could not articulate the concept of rank decomposition or explain how LoRA modifies attention weight matrices." },
-    { title: "Recommendation", text: "Consider a hands-on lab comparing LoRA vs full fine-tuning on a small model. Visual side-by-side comparisons of loss curves and parameter counts may help bridge the gap." },
+  passbyref: [
+    { title: "Root Cause", text: 'Students conflate "copying values" with "passing references." 65% of struggling students incorrectly stated that pass-by-value modifies the original variable when the function changes the parameter.' },
+    { title: "Conversation Pattern", text: "When asked follow-up questions, students could not explain why const& is useful for large objects or articulate the memory implications of each approach." },
+    { title: "Recommendation", text: "Consider a hands-on lab with visual debugging showing memory addresses. A side-by-side comparison of pass-by-value vs pass-by-reference with actual variable addresses would help bridge the gap." },
   ],
-  forgetting: [
-    { title: "Root Cause", text: "58% of students understand the definition but cannot explain the mechanism. They lack intuition for how gradient updates overwrite previously learned representations." },
-    { title: "Conversation Pattern", text: 'Students repeatedly asked the AI agent to "re-explain" forgetting, suggesting the initial lecture explanation did not provide sufficient concrete examples.' },
-    { title: "Recommendation", text: "A before-and-after demonstration showing model outputs on general tasks pre/post fine-tuning could make this concept tangible." },
+  headerfiles: [
+    { title: "Root Cause", text: "62% of students understand the concept but cannot explain the mechanism. They lack intuition for how #include literally copies header content and why separate compilation matters." },
+    { title: "Conversation Pattern", text: 'Students repeatedly asked the AI agent to "re-explain" header files, suggesting the initial lecture explanation did not provide sufficient concrete examples of the compilation process.' },
+    { title: "Recommendation", text: "A step-by-step walkthrough showing raw code → preprocessor output → compiled object files would make this concept tangible. Include a visual diagram of the compilation pipeline." },
   ],
-  hyperparams: [
-    { title: "Root Cause", text: "Students treat hyperparameters as arbitrary numbers. 72% of struggling students could not explain why a lower learning rate is typically used for fine-tuning vs. training from scratch." },
-    { title: "Conversation Pattern", text: 'Students frequently asked "what is the best learning rate?" indicating a memorization rather than understanding approach.' },
-    { title: "Recommendation", text: "An interactive hyperparameter exploration exercise where students see real-time effects on training curves would build deeper intuition." },
+  loops: [
+    { title: "Root Cause", text: "Students treat loop types as interchangeable. 68% of struggling students could not explain when a do-while loop is necessary versus a regular while loop." },
+    { title: "Conversation Pattern", text: 'Students frequently asked "which loop should I use?" indicating a memorization rather than understanding approach to control flow.' },
+    { title: "Recommendation", text: "An interactive exercise where students see the same problem solved with different loop types, highlighting when each is most appropriate, would build deeper intuition." },
   ],
-  dataprep: [
-    { title: "Root Cause", text: "Students are unfamiliar with the instruction-following format (system/user/assistant structure). 61% confused tokenization for fine-tuning with tokenization for inference." },
-    { title: "Conversation Pattern", text: 'Students asked the AI agent for "example datasets" more than any other topic in this lecture, suggesting they need more concrete examples in course materials.' },
-    { title: "Recommendation", text: "Provide a worked example walking through raw data → cleaned format → prompt template → tokenized input. A downloadable sample dataset would be highly valuable." },
+  scope: [
+    { title: "Root Cause", text: "Students are unfamiliar with stack frames and how local variables are created/destroyed. 55% confused global variables with static local variables." },
+    { title: "Conversation Pattern", text: 'Students asked the AI agent for "example code showing scope" more than any other topic in this lecture, suggesting they need more concrete examples in course materials.' },
+    { title: "Recommendation", text: "Provide a worked example with a visual call stack showing variable creation/destruction across function calls. A downloadable debugger walkthrough would be highly valuable." },
   ],
 };
 
 export const conceptMastery = [
-  { label: "Tokenization", pct: 92 },
-  { label: "Transfer Learning", pct: 85 },
-  { label: "Prompt Templates", pct: 74 },
-  { label: "Hyperparameters", pct: 55 },
-  { label: "Catastrophic Forget.", pct: 38 },
-  { label: "LoRA Trade-offs", pct: 22 },
+  { label: "Variables & Types", pct: 88 },
+  { label: "Control Flow", pct: 82 },
+  { label: "Functions", pct: 65 },
+  { label: "Pass-by-Reference", pct: 48 },
+  { label: "Header Files", pct: 42 },
+  { label: "Pointers", pct: 28 },
 ];
 
 export const questionResponses = [
-  { label: "Q1", correct: 32, partial: 40, incorrect: 28 },
-  { label: "Q2", correct: 45, partial: 30, incorrect: 25 },
-  { label: "Q3", correct: 58, partial: 28, incorrect: 14 },
-  { label: "Q4", correct: 70, partial: 20, incorrect: 10 },
-  { label: "Q5", correct: 50, partial: 35, incorrect: 15 },
+  { label: "Q1", correct: 68, partial: 22, incorrect: 10 },
+  { label: "Q2", correct: 55, partial: 30, incorrect: 15 },
+  { label: "Q3", correct: 45, partial: 35, incorrect: 20 },
 ];
 
 export const dashboardStats = [
-  { label: "Active Students", value: "128", change: "+12% from last lecture", up: true },
-  { label: "Avg. Comprehension", value: "67%", change: "-8% from last lecture", up: false },
-  { label: "AI Conversations", value: "342", change: "+23% from last lecture", up: true },
-  { label: "Questions Completed", value: "89%", change: "+5% from last lecture", up: true },
+  { label: "Active Students", value: "142", change: "+8% from last lecture", up: true },
+  { label: "Avg. Comprehension", value: "61%", change: "+5% from last lecture", up: true },
+  { label: "AI Conversations", value: "287", change: "+18% from last lecture", up: true },
+  { label: "Questions Completed", value: "76%", change: "+12% from last lecture", up: true },
 ];

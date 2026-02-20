@@ -11,9 +11,7 @@ export default function AiCompanion({ state = "idle", size = "md", className = "
   const idle  = state === "idle";
   const think = state === "thinking";
 
-  const wrapAnim = idle  ? "companion-float 3s ease-in-out infinite"
-                 : think ? "companion-think-bob 1.1s ease-in-out infinite"
-                 : "none";
+  const wrapAnim = "none";
 
   const ringAnim = think ? "companion-ring-spin 2s linear infinite"
                  : "none";
@@ -50,7 +48,7 @@ export default function AiCompanion({ state = "idle", size = "md", className = "
       )}
 
       <img
-        src="/assets/ai-companion.png"
+        src="/assets/faculty-companion.png"
         alt=""
         className="w-full h-full rounded-full object-cover"
         draggable={false}
