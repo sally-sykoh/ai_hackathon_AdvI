@@ -4,8 +4,8 @@ import LectureSidebar from "./components/LectureSidebar";
 import Topbar from "./components/Topbar";
 import CriticalInfo from "./components/CriticalInfo";
 import SuggestedQuestions from "./components/SuggestedQuestions";
+import GarminAnalytics from "./components/GarminAnalytics";
 import Dashboard from "./components/Dashboard";
-import ConceptMastery from "./components/ConceptMastery";
 import MaterialsCard from "./components/MaterialsCard";
 import DiveDeepModal from "./components/DiveDeepModal";
 
@@ -49,29 +49,34 @@ export default function App() {
 
       <Topbar />
 
-      {/* Bento Grid */}
       <div className="px-8 pt-6 pb-8">
-        <div className="grid grid-cols-12 gap-4">
+        {/* Row 1: Stat cards */}
+        <div className="mb-4">
+          <Dashboard statsOnly />
+        </div>
 
-          {/* Row 1: 4 stat cards */}
-          <div className="col-span-12">
-            <Dashboard statsOnly />
-          </div>
+        {/* Row 2: 3-column top panel */}
+        <div className="grid grid-cols-12 gap-4 mb-4">
 
-          {/* Row 2: Critical Info (left) | Suggested Questions (right) */}
-          <div className="col-span-6">
+          {/* Left: Critical Concepts — 4 rows stacked */}
+          <div className="col-span-3">
             <CriticalInfo onDiveDeep={handleDiveDeep} />
           </div>
-          <div className="col-span-6">
-            <SuggestedQuestions lectureId={lectureId} />
+
+          {/* Center: Garmin-style analytics */}
+          <div className="col-span-4">
+            <GarminAnalytics />
           </div>
 
-          {/* Row 3: Concept Mastery (left) | Course Materials (right) */}
-          <div className="col-span-6">
-            <ConceptMastery />
-          </div>
-          <div className="col-span-6">
+          {/* Right: Suggested Questions + Course Materials dropdown */}
+          <div className="col-span-5 flex flex-col gap-3">
+            {/* Course Materials — collapsed dropdown at the top */}
             <MaterialsCard />
+
+            {/* Suggested Questions fills remaining space */}
+            <div className="flex-1">
+              <SuggestedQuestions lectureId={lectureId} />
+            </div>
           </div>
 
         </div>
