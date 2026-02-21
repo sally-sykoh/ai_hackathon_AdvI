@@ -1,7 +1,11 @@
 .env
+ngrok.yml
 node_modules/
 dist/
 __pycache__/
 *.pyc
 .venv/
 .vercel
+
+# macOS
+.DS_Store
